@@ -71,7 +71,7 @@ def lambda_handler(event, context):
             message = "You’ve used all the data on your eSIM - if you’d like to top it up please visit https://easyesim.co/pages/top-ups"
         elif used_quantity >= percent_80:
             print("80% usage reached.")
-            message = "You’ve used 80% of the data on your eSIM - if you’d like to top it up please visit https://easyesim.co/pages/esim-usage"
+            message = "You’ve used 80% of the data on your eSIM - if you’d like to top it up please visit https://easyesim.co/pages/top-ups"
         elif used_quantity >= percent_50:
             print("50% usage reached.")
             message = "You’ve used 50% of the data on your eSIM - you can keep an eye on usage at https://easyesim.co/pages/esim-usage"
@@ -93,6 +93,7 @@ def lambda_handler(event, context):
 
     elif(request['alertType'] == 'FirstAttachment'):
         print("FirstAttachment")
+        
         # Create an instance of urllib3 PoolManager
         http = urllib3.PoolManager()
         url = 'https://api.esim-go.com/v2.2/esims/'+request['iccid']+'/sms'
