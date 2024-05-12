@@ -85,7 +85,7 @@ def lambda_handler(event, context):
             print("50% usage reached.")
             message = "You’ve used 50% of the data on your eSIM - you can keep an eye on usage at https://easyesim.co/pages/esim-usage"
 
-        if (message != ''):
+        if (message != '' and "esim_UL_" not in request['bundle']):
             # Create an instance of urllib3 PoolManager
             http = urllib3.PoolManager()
 
