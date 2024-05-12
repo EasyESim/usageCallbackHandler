@@ -29,8 +29,7 @@ def lambda_handler(event, context):
 
             for index, esim_detail in enumerate(esim_details):
                 print(esim_detail)
-                if "esim_UL_" in esim_detail['bundle']:
-                    continue
+
                 if esim_detail['iccid'] == iccid_to_find:
                     esim_details[index]['initialQuantity'] = str(
                         request['bundle']['initialQuantity'])
@@ -57,9 +56,6 @@ def lambda_handler(event, context):
                 print(response)
                 break
 
-        if "esim_UL_" in request['bundle']:
-            return
-
         initial_quantity = ['initialQuantity']
         remaining_quantity = request['bundle']['remainingQuantity']
         used_quantity = initial_quantity - remaining_quantity
@@ -85,7 +81,7 @@ def lambda_handler(event, context):
             print("50% usage reached.")
             message = "You’ve used 50% of the data on your eSIM - you can keep an eye on usage at https://easyesim.co/pages/esim-usage"
 
-        if (message != '' and "esim_UL_" not in request['bundle']):
+        if (message != '' or "esim_UL_" not in request['bundle']):
             # Create an instance of urllib3 PoolManager
             http = urllib3.PoolManager()
 
