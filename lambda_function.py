@@ -56,7 +56,7 @@ def lambda_handler(event, context):
                 print(response)
                 break
 
-        initial_quantity = ['initialQuantity']
+        initial_quantity = request['bundle']['initialQuantity']
         remaining_quantity = request['bundle']['remainingQuantity']
         used_quantity = initial_quantity - remaining_quantity
         print(used_quantity)
