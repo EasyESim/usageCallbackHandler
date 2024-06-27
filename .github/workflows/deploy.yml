@@ -45,7 +45,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
-          layer_name: python-layer
+          layer_name: eSIM_usage_callback_handler_layer
           zip_file: dependencies.zip
   deploy-source:
     name: deploy lambda
@@ -84,7 +84,7 @@ jobs:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ matrix.aws_region }}
-          function_name: python-layer
+          function_name: eSIM_usage_callback_handler
       - name: Deploy
         uses: appleboy/lambda-action@v0.1.9
         with:
