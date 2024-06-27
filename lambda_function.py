@@ -80,7 +80,7 @@ def lambda_handler(event, context):
             # Create an instance of urllib3 PoolManager
             http = urllib3.PoolManager()
 
-            url = 'https://api.esim-go.com/v2.2/esims/'+request['iccid']+'/sms'
+            url = 'https://api.esim-go.com/v2.3/esims/'+request['iccid']+'/sms'
             payload = {
                 "message": message,
                 "from": "eSIM"
@@ -96,7 +96,7 @@ def lambda_handler(event, context):
         
         # Create an instance of urllib3 PoolManager
         http = urllib3.PoolManager()
-        url = 'https://api.esim-go.com/v2.2/esims/'+request['iccid']+'/sms'
+        url = 'https://api.esim-go.com/v2.3/esims/'+request['iccid']+'/sms'
         payload = {
             "message": "Your eSIM has been set up correctly, good work! Remember to switch data roaming on for your eSIM and off for your existing SIM when you travel.",
             "from": "eSIM"
