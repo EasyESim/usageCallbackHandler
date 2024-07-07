@@ -81,21 +81,22 @@ def lambda_handler(event, context):
             print("50% usage reached.")
             message = "You’ve used 50% of the data on your eSIM - you can keep an eye on usage at https://easyesim.co/pages/esim-usage"
 
-        if (message != '' or "esim_UL_" not in request['bundle']):
-            # Create an instance of urllib3 PoolManager
-            http = urllib3.PoolManager()
+        if (message != ''):
+            if("esim_UL_" not in request['bundle']):
+                # Create an instance of urllib3 PoolManager
+                http = urllib3.PoolManager()
 
-            url = 'https://api.esim-go.com/v2.3/esims/'+request['iccid']+'/sms'
-            payload = {
-                "message": message,
-                "from": "eSIM"
-            }
-            headers = {"X-API-Key": auth_key}
-            r = http.request('POST', url, body=json.dumps(
-                payload), headers=headers)
-            response_text = r.data.decode('utf-8')
-            print(response_text)
-            return response_text
+                url = 'https://api.esim-go.com/v2.3/esims/'+request['iccid']+'/sms'
+                payload = {
+                        "message": message,
+                        "from": "eSIM"
+                    }
+                headers = {"X-API-Key": auth_key}
+                r = http.request('POST', url, body=json.dumps(
+                        payload), headers=headers)
+                response_text = r.data.decode('utf-8')
+                print(response_text)
+                return response_text
 
     elif (request['alertType'] == 'FirstAttachment'):
         print("FirstAttachment")
