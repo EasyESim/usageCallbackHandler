@@ -15,6 +15,7 @@ def lambda_handler(event, context):
         response_text = ""  # Initialize response_text
 
         if request['alertType'] == 'Utilisation':
+            print("Utilisation Notification")
             iccid_to_find = request['iccid']
             is_item_matched = False
             dynamodb = boto3.resource('dynamodb')
@@ -30,14 +31,15 @@ def lambda_handler(event, context):
                         esim_details[index]['remainingQuantity'] = str(request['bundle']['remainingQuantity'])
 
                         try:
-                            if request['bundle']['unlimited']:
+                            if request['bundle'].get('unlimited', False):
                                 esim_details[index]['startTime'] = ""
                                 esim_details[index]['endTime'] = ""
+                                print("Unlimited bundle detected")
                             else:
-                                esim_details[index]['startTime'] = request['bundle']['startTime']
-                                esim_details[index]['endTime'] = request['bundle']['endTime']
+                                esim_details[index]['startTime'] = request['bundle'].get('startTime', '')
+                                esim_details[index]['endTime'] = request['bundle'].get('endTime', '')
                         except KeyError as e:
-                            print(f"Missing start or end time data: {str(e)}")
+                            print(f"Error in getting startTime & endTime and Error is : {str(e)}")
                             continue  # Continue with the next iteration
 
                         if 'sentMessages' not in esim_details[index]:
@@ -101,6 +103,7 @@ def lambda_handler(event, context):
                     "from": "eSIM"
                 }
                 headers = {"X-API-Key": auth_key}
+                print("Usage Notification : " + message)
                 r = http.request('POST', url, body=json.dumps(payload), headers=headers)
                 response_text = r.data.decode('utf-8')
                 print(response_text)
@@ -127,11 +130,16 @@ def lambda_handler(event, context):
                                 UpdateExpression=update_expression,
                                 ExpressionAttributeValues=expression_attribute_values
                             )
-                            print("Sent message details updated in db")
+                            print("Sent notifications have been saved in the database.")
                             print(response)
                             break
         elif request['alertType'] == 'FirstAttachment':
-            print("FirstAttachment")
+            print("FirstAttachment Notification")
+            # Retrieve items from DynamoDB before checking the alertType
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('esim_details')
+            response = table.scan()
+            items = response.get('Items', [])
             # Create an instance of urllib3 PoolManager
             http = urllib3.PoolManager()
             url = 'https://api.esim-go.com/v2.3/esims/' + request['iccid'] + '/sms'
@@ -166,7 +174,7 @@ def lambda_handler(event, context):
                             UpdateExpression=update_expression,
                             ExpressionAttributeValues=expression_attribute_values
                         )
-                        print("Sent message details updated in db")
+                        print("Sent notifications have been saved in the database.")
                         print(response)
                         break
         # Return the response text as part of the response
