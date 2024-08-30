@@ -164,6 +164,10 @@ def lambda_handler(event, context):
                 esim_details = item.get('esim_details', {})
                 for index, esim_detail in enumerate(esim_details):
                     if esim_detail['iccid'] == request['iccid']:
+                        # Ensure 'sentMessages' exists in the esim_detail dictionary
+                        if 'sentMessages' not in esim_details[index]:
+                            esim_details[index]['sentMessages'] = []
+                            
                         esim_details[index]['sentMessages'].append(sent_message_details)
                         update_expression = "SET esim_details = :esim_details"
                         expression_attribute_values = {":esim_details": esim_details}
